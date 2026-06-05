@@ -51,7 +51,7 @@ def run_diagnostics():
         print("🔄 Sending live ping request to Llama-3 hardware cluster...")
         llm = ChatGroq(
             temperature=0.0,
-            model_name="llama3-8b-8192",
+            model_name="llama-3.1-8b-instant",
             groq_api_key=groq_key
         )
         
