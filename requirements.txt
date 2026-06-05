@@ -1,0 +1,10 @@
+chainlit==1.0.200
+python-dotenv==1.0.0
+langchain==0.1.16
+langchain-community==0.0.34
+wikipedia==1.4.0
+tiktoken==0.6.0
+faiss-cpu==1.8.0
+sentence-transformers==2.7.0
+langchain-huggingface==0.0.1
+langchain-groq==0.1.3

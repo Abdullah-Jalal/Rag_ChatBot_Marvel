@@ -1,0 +1,22 @@
+# Sensitive Environment Variables (DO NOT PUSH TO GITHUB)
+.env
+
+# Python Virtual Environment
+venv/
+ENV/
+env/
+
+# Python Compilation & Cache Files
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.pytest_cache/
+
+# Local Vector Database 
+# (Evaluators will generate this dynamically by running src/ingest.py)
+vector_db/
+
+# Operating System Files
+.DS_Store
+Thumbs.db
