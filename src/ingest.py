@@ -1,68 +1,94 @@
 import os
-import wikipedia  # Import raw library to configure global API client settings
+import time
+import wikipedia  
 from langchain_community.document_loaders import WikipediaLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_huggingface import HuggingFaceEmbeddings
 from langchain_community.vectorstores import FAISS
 
-# 1. CRITICAL FIX: Set a custom User-Agent to satisfy Wikimedia's API access policy.
-# This prevents their servers from blocking your IP with a 403 HTML error.
-wikipedia.set_user_agent("MarvelRagChatbot/1.0 (academic_evaluation_project@example.com)")
+# 1. Maintain API compliance
+wikipedia.set_user_agent("MarvelRagChatbot/2.0_Enterprise (academic_evaluation_project@example.com)")
 
 DB_PATH = "vector_db"
 
 def ingest_and_store():
-    # Define targeted, dense Wikipedia topics for the dataset
+    # THE MASTER LORE MATRIX
+    # We target dense "List" pages and massive crossover events to maximize data density
     topics = [
-        "Marvel Cinematic Universe",
-        "List of Marvel Cinematic Universe films",
-        "Avengers (comics)"
+        # MCU Complete
+        "Marvel Cinematic Universe", "List of Marvel Cinematic Universe films", 
+        "List of Marvel Cinematic Universe television series", "Timeline of the Marvel Cinematic Universe",
+        
+        # Massive Catalogs & Indexes
+        "List of Marvel Comics characters", "List of Marvel Comics teams and organizations",
+        "List of alien races in Marvel Comics", "List of deities in Marvel Comics",
+        "List of Marvel Comics superhero debuts", "Features of the Marvel Universe",
+        
+        # Major Crossover Events (The core lore of the comics)
+        "Secret Wars (1984 comic book)", "Secret Wars (2015 comic book)",
+        "Infinity Gauntlet", "Civil War (comics)", "House of M", "Avengers vs. X-Men",
+        "Age of Ultron", "Secret Invasion", "Annihilation (comics)", "Spider-Verse",
+
+        # Cosmic Entities & Artifacts
+        "Eternals (comics)", "Celestials (comics)", "Watchers (Marvel Comics)",
+        "Cosmic Cube", "Infinity Gems", "Ultimate Nullifier", "Vibranium", "Adamantium",
+
+        # Deep Lore Teams
+        "Avengers (comics)", "X-Men", "Fantastic Four", "Guardians of the Galaxy (1969 team)",
+        "Guardians of the Galaxy (2008 team)", "Inhumans", "Defenders (comics)", 
+        "Illuminati (comics)", "Midnight Sons", "Thunderbolts (comics)", "Sinister Six",
+        
+        # Key Locations
+        "Wakanda", "Asgard (comics)", "Latveria", "Savage Land", "Madripoor", "Krakoa"
     ]
     
     raw_documents = []
-    print("🤖 Starting data ingestion from Wikipedia...")
+    print(f"🛡️ [SYSTEM] Initiating Deep-Lore Data Lake Ingestion. Total Targets: {len(topics)}")
     
-    # 2. Content Ingestion: Cleanly load text and strip bad HTML markers
-    for topic in topics:
+    # 2. Rate-Limited Ingestion Loop
+    for i, topic in enumerate(topics):
         try:
-            loader = WikipediaLoader(query=topic, load_max_docs=2, doc_content_chars_max=20000)
+            # We increase load_max_docs to pull secondary connected pages, and increase character limits
+            loader = WikipediaLoader(query=topic, load_max_docs=3, doc_content_chars_max=40000)
             docs = loader.load()
             raw_documents.extend(docs)
-            print(f"✅ Successfully loaded context for: '{topic}'")
+            print(f"  [+] {i+1}/{len(topics)} Downloaded: '{topic}' ({len(docs)} files)")
+            
+            # CRITICAL: Pause for 1.5 seconds between requests to prevent API bans
+            time.sleep(1.5) 
+            
         except Exception as e:
-            print(f"❌ Failed to load '{topic}': {e}")
+            print(f"  [!] Failed to load '{topic}': {e}")
 
-    print(f"\nTotal raw documents loaded: {len(raw_documents)}")
+    print(f"\n📊 [DATA] Total raw documents loaded into memory: {len(raw_documents)}")
 
-    # 3. Defensive Guard Clause: Stop execution cleanly if no data was fetched
     if not raw_documents:
-        print("⚠️  CRITICAL ERROR: No documents were retrieved from the API. Ingestion halted.")
+        print("❌ [ERROR] Ingestion halted. No data retrieved.")
         return
 
-    # 4. Token Chunking: 500-token chunks with a 10% overlap (50 tokens)
-    print("🧩 Chunking text into strict 500-token blocks...")
+    # 3. Chunking 
+    print("✂️ [PROCESSING] Slicing data into 500-token vectors...")
     text_splitter = RecursiveCharacterTextSplitter.from_tiktoken_encoder(
-        model_name="gpt-3.5-turbo", # Uses standard cl100k_base tokenizer
+        model_name="gpt-3.5-turbo",
         chunk_size=500,
         chunk_overlap=50
     )
     
     chunked_docs = text_splitter.split_documents(raw_documents)
-    print(f"🧩 Created {len(chunked_docs)} distinct vector-ready text chunks.")
+    print(f"📦 [DATA] Created {len(chunked_docs)} distinct vector-ready text chunks.")
 
-    # 5. Mathematical Vector Generation
-    print("🧠 Initializing Hugging Face embedding model (all-MiniLM-L6-v2)...")
-    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2")
+    # 4. Neural Embedding
+    print("🧠 [NEURAL] Initializing Hugging Face Math Engine (all-MiniLM-L6-v2)...")
+    embeddings = HuggingFaceEmbeddings(model_name="all-MiniLM-L6-v2", model_kwargs={'device': 'cpu'})
 
-    # 6. Initialize a dedicated Vector Database and Persistence
-    print("💾 Generating vector matrices and saving to FAISS database...")
+    # 5. Database Compilation
+    print("💾 [DATABASE] Compiling FAISS index. This may take a moment...")
     try:
         vector_store = FAISS.from_documents(chunked_docs, embeddings)
-        # Save the index locally so the retrieval script can load it later
         vector_store.save_local(DB_PATH)
-        print(f"✅ Vector database successfully initialized and saved to the '{DB_PATH}' folder!")
+        print(f"✅ [SUCCESS] Massive Vector Database compiled and secured in '{DB_PATH}'!")
     except Exception as e:
-        print(f"❌ FAISS Vector Store creation failed: {e}")
+        print(f"❌ [ERROR] FAISS compilation failed: {e}")
 
 if __name__ == "__main__":
     ingest_and_store()

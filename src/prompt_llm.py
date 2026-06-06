@@ -7,7 +7,7 @@ from src.retrieve import retrieve_context
 # 1. Load environment variables from the root .env file
 load_dotenv()
 
-def generate_rag_response(user_query):
+def generate_rag_response(user_query, chat_history_str=""):
     # 2. Retrieve the matching Wikipedia context chunks using your retrieve script
     context = retrieve_context(user_query, k=4)
     
@@ -22,7 +22,7 @@ def generate_rag_response(user_query):
             groq_api_key=os.getenv("GROQ_API_KEY")
         )
     except Exception as e:
-        return f"❌ Error initializing Groq LLM. Check your GROQ_API_KEY. Details: {e}", context
+        return f"[ERROR] Error initializing Groq LLM. Check your GROQ_API_KEY. Details: {e}", context
 
     # 4. Construct a strict System Prompt to prevent hallucinations (as mandated by syllabus)
     system_prompt = (
@@ -33,6 +33,7 @@ def generate_rag_response(user_query):
         "explicitly with: 'The requested target info is missing from the provided dataset.'\n"
         "2. Do not extrapolate, assume, or use external knowledge outside of the provided context.\n"
         "3. Keep your response factual and professional.\n\n"
+        "PREVIOUS CHAT HISTORY (Use this to understand context if the user asks follow-up questions):\n{chat_history}\n\n"
         "[CONTEXT]:\n{retrieved_chunks}"
     )
 
@@ -45,9 +46,10 @@ def generate_rag_response(user_query):
     # 6. Chain the elements together and invoke the inference hardware
     chain = prompt_template | llm
     
-    print(f"🧠 Dispatching context-injected prompt to Groq API (llama-3.1-8b-instant)...")
+    print(f"Dispatching context-injected prompt to Groq API (llama-3.1-8b-instant)...")
     response = chain.invoke({
         "retrieved_chunks": context,
+        "chat_history": chat_history_str,
         "user_query": user_query
     })
     
@@ -60,6 +62,6 @@ if __name__ == "__main__":
     answer, sources = generate_rag_response(query)
     
     print("\n==================================================")
-    print("🤖 AI ANSWER:")
+    print("AI ANSWER:")
     print("==================================================\n")
     print(answer)

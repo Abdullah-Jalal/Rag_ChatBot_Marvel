@@ -1,0 +1,294 @@
+/* ==========================================
+   🛡️ MARVEL DATABASE HUD LAYOUT BASE
+   ========================================== */
+
+/* Dark Mode Background Canvas */
+html.dark body, 
+html.dark .MuiBox-root, 
+html.dark #root, 
+html.dark [role="presentation"] {
+    background-color: #060709 !important;
+    background-image: 
+        radial-gradient(circle at 50% 30%, #1e1114 0%, #060709 70%),
+        linear-gradient(rgba(226, 54, 54, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(226, 54, 54, 0.02) 1px, transparent 1px) !important;
+    background-size: 100% 100%, 25px 25px, 25px 25px !important;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+    color: #f4f4f5 !important;
+}
+
+/* Light Mode Background Canvas */
+html:not(.dark) body, 
+html:not(.dark) .MuiBox-root, 
+html:not(.dark) #root, 
+html:not(.dark) [role="presentation"] {
+    background-color: #fafafa !important;
+    background-image: 
+        radial-gradient(circle at 50% 30%, #fff2f2 0%, #fafafa 70%),
+        linear-gradient(rgba(226, 54, 54, 0.02) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(226, 54, 54, 0.02) 1px, transparent 1px) !important;
+    background-size: 100% 100%, 25px 25px, 25px 25px !important;
+    font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif !important;
+    color: #18181b !important;
+}
+
+/* Custom Welcome Screen Design */
+html.dark .marvel-dashboard-welcome,
+html.dark .stark-dashboard-welcome {
+    text-align: center;
+    padding: 35px 30px;
+    margin: 40px auto;
+    max-width: 650px;
+    background: rgba(15, 10, 11, 0.65);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(226, 54, 54, 0.2);
+    border-radius: 16px;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), inset 0 0 20px rgba(226, 54, 54, 0.05);
+}
+
+html:not(.dark) .marvel-dashboard-welcome,
+html:not(.dark) .stark-dashboard-welcome {
+    text-align: center;
+    padding: 35px 30px;
+    margin: 40px auto;
+    max-width: 650px;
+    background: rgba(255, 255, 255, 0.85);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(226, 54, 54, 0.15);
+    border-radius: 16px;
+    box-shadow: 0 12px 30px rgba(226, 54, 54, 0.08);
+}
+
+.marvel-logo-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 24px;
+}
+
+.marvel-logo-img {
+    width: 220px;
+    height: auto;
+    filter: drop-shadow(0 0 12px rgba(226, 54, 54, 0.6));
+    transition: transform 0.3s ease;
+}
+
+.marvel-logo-img:hover {
+    transform: scale(1.04);
+}
+
+.hud-title {
+    font-weight: 800 !important;
+    letter-spacing: 4px !important;
+    margin: 10px 0 5px 0 !important;
+    font-size: 1.8rem !important;
+}
+
+html.dark .hud-title {
+    color: #ffffff !important;
+    text-shadow: 0 0 15px rgba(226, 54, 54, 0.5) !important;
+}
+
+html:not(.dark) .hud-title {
+    color: #1e1b1b !important;
+    text-shadow: 0 0 8px rgba(226, 54, 54, 0.2) !important;
+}
+
+.hud-subtitle {
+    font-size: 0.8rem !important;
+    letter-spacing: 2px !important;
+    margin-bottom: 24px !important;
+}
+
+html.dark .hud-subtitle {
+    color: #9bb0c5 !important;
+}
+
+html:not(.dark) .hud-subtitle {
+    color: #556677 !important;
+}
+
+/* Tactical HUD Live Status Bar */
+.hud-status-bar {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 14px;
+    border-radius: 20px;
+}
+
+html.dark .hud-status-bar {
+    background: rgba(0, 0, 0, 0.5);
+    border: 1px solid rgba(226, 54, 54, 0.25);
+}
+
+html:not(.dark) .hud-status-bar {
+    background: rgba(226, 54, 54, 0.05);
+    border: 1px solid rgba(226, 54, 54, 0.15);
+}
+
+.status-indicator.glowing {
+    width: 8px;
+    height: 8px;
+    background-color: #e23636;
+    border-radius: 50%;
+    box-shadow: 0 0 10px #e23636, 0 0 20px #e23636;
+    animation: status-pulse 2s infinite ease-in-out;
+}
+
+@keyframes status-pulse {
+    0% { opacity: 0.4; }
+    50% { opacity: 1; }
+    100% { opacity: 0.4; }
+}
+
+.status-text {
+    font-size: 0.75rem !important;
+    font-weight: 700;
+    color: #e23636;
+    letter-spacing: 1px;
+}
+
+/* ==========================================
+   💬 CHAT MESSAGES & GLASSMORPHIC CARDS
+   ========================================== */
+
+.cl-message {
+    border-radius: 12px !important;
+    margin-top: 12px !important;
+    margin-bottom: 12px !important;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+}
+
+/* Dark Mode Messages */
+html.dark .cl-message-content {
+    background: rgba(20, 20, 25, 0.75) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(226, 54, 54, 0.1) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4) !important;
+    padding: 16px !important;
+    color: #f4f4f5 !important;
+}
+
+/* Light Mode Messages */
+html:not(.dark) .cl-message-content {
+    background: rgba(255, 255, 255, 0.95) !important;
+    backdrop-filter: blur(10px) !important;
+    -webkit-backdrop-filter: blur(10px) !important;
+    border: 1px solid rgba(226, 54, 54, 0.15) !important;
+    border-radius: 12px !important;
+    box-shadow: 0 4px 15px rgba(226, 54, 54, 0.05) !important;
+    padding: 16px !important;
+    color: #18181b !important;
+}
+
+/* User Prompt Container - Red Highlight */
+.cl-user-message .cl-message-content {
+    border-left: 4px solid #e23636 !important;
+    border-top: 1px solid rgba(226, 54, 54, 0.2) !important;
+    border-right: 1px solid rgba(226, 54, 54, 0.2) !important;
+    border-bottom: 1px solid rgba(226, 54, 54, 0.2) !important;
+}
+
+html.dark .cl-user-message .cl-message-content {
+    background: rgba(226, 54, 54, 0.05) !important;
+}
+
+html:not(.dark) .cl-user-message .cl-message-content {
+    background: rgba(226, 54, 54, 0.03) !important;
+}
+
+/* Paper element overrides (Dropdowns, modals, and left sidebar) */
+html.dark .MuiPaper-root {
+    background-color: rgba(12, 12, 14, 0.95) !important;
+    border-right: 1px solid rgba(226, 54, 54, 0.15) !important;
+    background-image: none !important;
+}
+
+html:not(.dark) .MuiPaper-root {
+    background-color: rgba(255, 255, 255, 0.98) !important;
+    border-right: 1px solid rgba(226, 54, 54, 0.1) !important;
+    background-image: none !important;
+}
+
+/* ==========================================
+   ⌨️ INPUT CONSOLE & BUTTON CONTROLS
+   ========================================== */
+
+/* Dark Mode Input */
+html.dark #chat-input {
+    background-color: rgba(12, 12, 14, 0.85) !important;
+    backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(226, 54, 54, 0.3) !important;
+    color: #ffffff !important;
+    border-radius: 10px !important;
+    box-shadow: 0 0 15px rgba(226, 54, 54, 0.03), inset 0 2px 4px rgba(0, 0, 0, 0.5) !important;
+    font-size: 0.95rem !important;
+    padding: 14px 18px !important;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease !important;
+}
+
+html.dark #chat-input:focus {
+    border-color: #e23636 !important;
+    box-shadow: 0 0 20px rgba(226, 54, 54, 0.25), inset 0 1px 2px rgba(0, 0, 0, 0.5) !important;
+}
+
+/* Light Mode Input */
+html:not(.dark) #chat-input {
+    background-color: rgba(255, 255, 255, 0.9) !important;
+    backdrop-filter: blur(8px) !important;
+    border: 1px solid rgba(226, 54, 54, 0.2) !important;
+    color: #18181b !important;
+    border-radius: 10px !important;
+    box-shadow: 0 2px 8px rgba(226, 54, 54, 0.04) !important;
+    font-size: 0.95rem !important;
+    padding: 14px 18px !important;
+    transition: box-shadow 0.3s ease, border-color 0.3s ease !important;
+}
+
+html:not(.dark) #chat-input:focus {
+    border-color: #e23636 !important;
+    box-shadow: 0 0 15px rgba(226, 54, 54, 0.15), inset 0 1px 2px rgba(0, 0, 0, 0.05) !important;
+}
+
+button, .MuiIconButton-root {
+    color: #e23636 !important;
+    transition: transform 0.2s ease, color 0.2s ease !important;
+}
+
+html.dark button:hover, html.dark .MuiIconButton-root:hover {
+    color: #ffffff !important;
+    transform: scale(1.05);
+}
+
+html:not(.dark) button:hover, html:not(.dark) .MuiIconButton-root:hover {
+    color: #000000 !important;
+    transform: scale(1.05);
+}
+
+/* Scrollbars Adjustment for Premium Finishes */
+::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+}
+
+html.dark ::-webkit-scrollbar-track {
+    background: #060709;
+}
+
+html:not(.dark) ::-webkit-scrollbar-track {
+    background: #f4f4f5;
+}
+
+::-webkit-scrollbar-thumb {
+    background: rgba(226, 54, 54, 0.2);
+    border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: rgba(226, 54, 54, 0.4);
+}
